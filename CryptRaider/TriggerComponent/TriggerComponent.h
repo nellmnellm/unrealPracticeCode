@@ -3,18 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
-#include "Mover.generated.h"
+#include "Components/BoxComponent.h"
+#include "Mover.h"
+#include "TriggerComponent.generated.h"
 
 
+/**
+ * 
+ */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CRYPTRAIDER_API UMover : public UActorComponent
+// blueprint sohwan ganung 
+class CRYPTRAIDER_API UTriggerComponent : public UBoxComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
-	UMover();
+public:
+	UTriggerComponent();
 
 protected:
 	// Called when the game starts
@@ -23,17 +27,16 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void SetShouldMove(bool ShouldMove);
-
+	
+	UFUNCTION(BlueprintCallable)
+	void SetMover(UMover* Mover); // uizonesung juip
 private:
 	UPROPERTY(EditAnywhere)
-	FVector MoveOffset;
-	
-	UPROPERTY(EditAnywhere)
-	float MoveTime = 4;
+	FName AcceptableActorTag;
 
-	bool ShouldMove = false;
-	
-	FVector OriginalLocation;
+	UMover* Mover; // uizonesung juip
+
+	AActor* GetAcceptableActor() const;
 };
+
+
