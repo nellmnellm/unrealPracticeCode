@@ -18,7 +18,15 @@ public:
 	ATank();
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	virtual void Tick(float DeltaTime) override;
 
+	void HandleDestruction();
+
+	APlayerController* GetTankPlayerController() const { return TankPlayerController;};
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -27,5 +35,14 @@ private:
 	class UCameraComponent* Camera;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "moving", meta = (AllowPrivateAccess = "true"))
 	float Speed = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "moving", meta = (AllowPrivateAccess = "true"))
+	float TurnRate = 50.f;
+
 	void Move(float Value);
+	void Turn(float Value);
+	
+	APlayerController* TankPlayerController;
+
+public:
+	bool bAlive = true;
 };

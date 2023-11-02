@@ -29,11 +29,13 @@ public:
 	UPROPERTY(EditDefaultOnly)
 	UPROPERTY(EditInstaceOnly)
 	*/
+	void HandleDestruction();
+	
 protected:
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-
+	//virtual void BeginPlay() override;
+	void RotateTurret(FVector LookAtTarget);
+	void Fire();
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* CapsuleComp;
@@ -44,13 +46,20 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* ProjectileSpawnPoint;
 	
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<class AProjectile> ProjectileClass; // have class type variable
 	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Base Pawn double", meta = (AllowPrivateAccess = "true"))
 	int32 VisibleAnywhereInt2 = 32;*/
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	class UParticleSystem* DeathParticles;
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	class USoundBase* DeathSound;
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<class UCameraShakeBase> DeathCameraShakeClass;
 	// Called to bind functionality to input
 	
 
