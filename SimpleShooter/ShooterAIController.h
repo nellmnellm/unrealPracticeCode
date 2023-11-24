@@ -16,14 +16,24 @@ class SIMPLESHOOTER_API AShooterAIController : public AAIController
 	
 public:
 	virtual void Tick(float DeltaSeconds) override;
+	bool IsDead() const;
+	
+	UFUNCTION(BlueprintCallable)
+	void SetDifficulty();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 AIDifficulty;
+	
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	/* UPROPERTY(EditAnywhere)
 	float AcceptanceRadius = 500; */
-	UPROPERTY(EditAnywhere)
-	class UBehaviorTree* AIBehavior;
+	
+	//UPROPERTY(EditAnywhere)
+	//class UBehaviorTree* AIBehavior;
+	
+	
 };
 
 

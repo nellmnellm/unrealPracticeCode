@@ -33,13 +33,17 @@ private:
 	//void LookUp(float AxisValue);
 	void MoveRight(float AxisValue);
 
+	void LookUp(float AxisValue);
+
+	void LookRight(float AxisValue);
+
 	void LookUpRate(float AxisValue);
 
 	void LookRightRate(float AxisValue);
 
 	
 	UPROPERTY(EditAnywhere)
-	float RotationRate = 10;
+	float RotationRate;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGun> GunClass;
 	UPROPERTY()	
@@ -58,5 +62,10 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
 
+	UFUNCTION(BlueprintPure)
+	float GetHealthPercent() const;
+
+	void SetRotationRate();
+	
 	
 };

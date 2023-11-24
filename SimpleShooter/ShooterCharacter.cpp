@@ -5,6 +5,9 @@
 #include "Gun.h"
 #include "Engine/DamageEvents.h"
 #include "Components/CapsuleComponent.h"
+#include "SimpleShooterGameModeBase.h"
+#include "TitleWidget.h"
+#include "optionInstance.h"
 // Sets default values
 AShooterCharacter::AShooterCharacter()
 {
@@ -17,7 +20,7 @@ AShooterCharacter::AShooterCharacter()
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetRotationRate();
 	Health = MaxHealth;
 
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
@@ -37,10 +40,14 @@ void AShooterCharacter::Tick(float DeltaTime)
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	SetRotationRate();
 	PlayerInputComponent -> BindAxis(TEXT("MoveForward"), this, &AShooterCharacter::MoveForward);
-	PlayerInputComponent -> BindAxis(TEXT("LookUp"), this, &APawn::AddControllerPitchInput);
+	//PlayerInputComponent -> BindAxis(TEXT("LookUp"), this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent -> BindAxis(TEXT("LookUp"), this, &AShooterCharacter::LookUp);
 	PlayerInputComponent -> BindAxis(TEXT("MoveRight"), this, &AShooterCharacter::MoveRight);
-	PlayerInputComponent -> BindAxis(TEXT("LookRight"), this, &APawn::AddControllerYawInput);
+	//PlayerInputComponent -> BindAxis(TEXT("LookRight"), this, &APawn::AddControllerYawInput);
+	PlayerInputComponent -> BindAxis(TEXT("LookRight"), this, &AShooterCharacter::LookRight);
+
 	PlayerInputComponent -> BindAxis(TEXT("LookUpRate"), this, &AShooterCharacter::LookUpRate);
 	PlayerInputComponent -> BindAxis(TEXT("LookRightRate"), this, &AShooterCharacter::LookRightRate);
 	PlayerInputComponent -> BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
@@ -57,14 +64,25 @@ void AShooterCharacter::MoveRight(float AxisValue)
 	AddMovementInput(GetActorRightVector() * AxisValue);
 }
 
+void AShooterCharacter::LookUp(float AxisValue)
+{
+	AddControllerPitchInput(AxisValue * RotationRate);
+}
+
+void AShooterCharacter::LookRight(float AxisValue)
+{
+	AddControllerYawInput(AxisValue * RotationRate);
+}
+
+
 void AShooterCharacter::LookUpRate(float AxisValue)
 {
-	AddControllerPitchInput(AxisValue * RotationRate * GetWorld()->GetDeltaSeconds());
+	AddControllerPitchInput(AxisValue * RotationRate * 50 * GetWorld()->GetDeltaSeconds());
 }
 
 void AShooterCharacter::LookRightRate(float AxisValue)
 {
-	AddControllerYawInput(AxisValue * RotationRate * GetWorld()->GetDeltaSeconds());
+	AddControllerYawInput(AxisValue * RotationRate * 50 * GetWorld()->GetDeltaSeconds());
 }
 
 void AShooterCharacter::Shoot()
@@ -82,6 +100,11 @@ float AShooterCharacter::TakeDamage(float DamageAmount, struct FDamageEvent cons
 
 	if (IsDead())
 	{
+		ASimpleShooterGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASimpleShooterGameModeBase>();
+		if (GameMode != nullptr)
+		{
+			GameMode->PawnKilled(this);
+		}
 		DetachFromControllerPendingDestroy();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
@@ -94,6 +117,22 @@ bool AShooterCharacter::IsDead() const
 		return true;
 	else
 		return false;
+}
+
+float AShooterCharacter::GetHealthPercent() const
+{
+	return Health / MaxHealth;
+}
+
+void AShooterCharacter::SetRotationRate()
+{
+	UoptionInstance* GameInstance = Cast<UoptionInstance>(GetGameInstance());
+
+    if (GameInstance)
+    {
+        // Use difficulty and sensitivity
+        RotationRate = GameInstance->Sens;
+	}
 }
 
 /* void AShooterCharacter::LookUp(float AxisValue)
