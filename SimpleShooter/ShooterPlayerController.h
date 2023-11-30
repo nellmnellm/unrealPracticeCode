@@ -24,6 +24,9 @@ public:
 
 private:
 
+	
+	
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> LoseScreenClass;
 	UPROPERTY(EditAnywhere)
@@ -36,4 +39,16 @@ private:
 	FTimerHandle RestartTimer;
 	UPROPERTY(EditAnywhere)
 	UUserWidget* LineOfSight;
+
+public:
+	UFUNCTION(BlueprintCallable)
+    void OpenMenu();
+    UFUNCTION(BlueprintCallable)
+    void CloseMenu();
+    UPROPERTY(BlueprintReadWrite)
+	bool bIsMenuOpen;
+    UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> MenuClass;
+    UPROPERTY(EditAnywhere)
+    UUserWidget* Menu;
 };

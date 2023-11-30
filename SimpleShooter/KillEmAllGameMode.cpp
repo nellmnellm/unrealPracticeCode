@@ -19,11 +19,13 @@ void AKillEmAllGameMode::PawnKilled(APawn* PawnKilled)
 
     for (AShooterAIController* Controller : TActorRange<AShooterAIController>(GetWorld()))
     {
+        
         if (!Controller->IsDead())
         {
             return;
         }
     }
+    
     EndGame(true);
 }
 

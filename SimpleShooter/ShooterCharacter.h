@@ -59,6 +59,8 @@ public:
 
 	void Shoot();
 	
+	void ToggleMenu();
+	
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
 

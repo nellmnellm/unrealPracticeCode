@@ -8,6 +8,7 @@
 #include "SimpleShooterGameModeBase.h"
 #include "TitleWidget.h"
 #include "optionInstance.h"
+#include "ShooterPlayerController.h"
 // Sets default values
 AShooterCharacter::AShooterCharacter()
 {
@@ -52,6 +53,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent -> BindAxis(TEXT("LookRightRate"), this, &AShooterCharacter::LookRightRate);
 	PlayerInputComponent -> BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent -> BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Shoot);
+	PlayerInputComponent -> BindAction(TEXT("Menu"), EInputEvent::IE_Pressed, this, &AShooterCharacter::ToggleMenu);
 }
 
 void AShooterCharacter::MoveForward(float AxisValue)
@@ -139,3 +141,25 @@ void AShooterCharacter::SetRotationRate()
 {
 	AddControllerPitchInput(AxisValue); // function is very leaner
 } */
+
+
+void AShooterCharacter::ToggleMenu()
+{
+    
+	AShooterPlayerController* PlayerController = GetController<AShooterPlayerController>();
+	UE_LOG(LogTemp, Display, TEXT("Togglemenu open"));
+	if (PlayerController->bIsMenuOpen)
+	{
+		UE_LOG(LogTemp, Display, TEXT("close"));
+		PlayerController->CloseMenu();
+		PlayerController->bShowMouseCursor = false;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("open"));
+		PlayerController->OpenMenu();
+		PlayerController->bShowMouseCursor = true;
+	}
+
+
+}

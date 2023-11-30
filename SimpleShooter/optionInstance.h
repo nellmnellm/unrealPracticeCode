@@ -14,6 +14,8 @@ class SIMPLESHOOTER_API UoptionInstance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
+    UoptionInstance();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
     int32 Diff;
 
